@@ -9,5 +9,7 @@
   "type": "stdio",
   "allowed_origins": [
     "chrome-extension://knldjmfmopnpolahpmmgbagdohdnhkik/"
+    //    "chrome-extension://avocado/",
+    //    "http://localhost:63342/"
   ]
 }

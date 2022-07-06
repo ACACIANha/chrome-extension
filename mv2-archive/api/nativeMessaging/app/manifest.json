@@ -2,18 +2,60 @@
   // Extension ID: knldjmfmopnpolahpmmgbagdohdnhkik
   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDcBHwzDvyBQ6bDppkIs9MP4ksKqCMyXQ/A52JivHZKh4YO/9vJsT3oaYhSpDCE9RPocOEQvwsHsFReW2nUEc6OLLyoCFFxIb7KkLGsmfakkut/fFdNJYh0xOTbSN8YvLWcqph09XAY2Y/f0AL7vfO1cuCqtkMt8hFrBGWxDdf9CQIDAQAB",
   "name": "Native Messaging Example",
-  "version": "1.0",
-  "manifest_version": 2,
+  "version": "1.0.0",
+  "manifest_version": 3,
   "description": "Send a message to a native application.",
-  "app": {
-    "launch": {
-      "local_path": "main.html"
-    }
-  },
+  //  "app": {
+  //    "launch": {
+  //      "local_path": "main.html"
+  //    }
+  //  },
   "icons": {
     "128": "icon-128.png"
   },
   "permissions": [
     "nativeMessaging"
-  ]
+  ],
+  "action": {
+    "default_popup": "main.html",
+    "default_title": "Native"
+  },
+  "host_permissions": [
+    "*://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "./test.js"
+      ]
+    }
+  ],
+  //  "externally_connectable": {
+  //    "matches": [
+  //      "*://localhost/*"
+  //    ]
+  //  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  }
+
+  //  "web_accessible_resources": [
+  //    {
+  //      "resources": [
+  //        "app/icon-128.png"
+  //      ],
+  //      "matches": [
+  //        "<all_urls>"
+  //      ],
+  //      "extension_ids": [
+  //        "avocado"
+  //      ],
+  //      "use_dynamic_url": true
+  //    }
+  //  ]
 }
