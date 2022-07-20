@@ -29,11 +29,15 @@ except ImportError:
 # import queue module
 try:
     import Queue
+
+    QueueCheck = True
 except ImportError:
     QueueCheck = None
 
 try:
     from queue import Queue
+
+    queueCheck = True
 except ImportError:
     queueCheck = None
 
@@ -200,11 +204,6 @@ if Tkinter:
 def Main():
     if not tkinter:
         logging.error('not found tkinter')
-        send_message_string_to_json("error")
-        send_message('"tkinter python module wasn\'t found. Running in headless ' +
-                     'mode. Please consider installing Tkinter."')
-        read_thread_func(None)
-        sys.exit(0)
     else:
         logging.info('found tkinter')
 
@@ -214,16 +213,17 @@ def Main():
         logging.info('found Tkinter')
 
     if not queueCheck:
-        logging.error('not found queue module')
+        logging.error('not found queue module 3')
+        if QueueCheck:
+            logging.info('queue generate 2')
+            queue = Queue.Queue()
+            logging.info('queue generated 2')
+        else:
+            logging.error('not found Queue module 2')
     else:
-        logging.info('Queue generate success 3')
+        logging.info('Queue generate 3')
         queue = Queue()
-
-    if not QueueCheck:
-        logging.error('not found Queue module')
-    elif not queue:
-        logging.info('queue generate success 2')
-        queue = Queue.Queue()
+        logging.info('Queue generated 3')
 
     if tkinter:
         main_window = NativeMessagingWindow3(queue)
