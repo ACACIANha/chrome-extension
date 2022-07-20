@@ -26,7 +26,16 @@ try:
 except ImportError:
     Tkinter = None
 
-from queue import Queue
+# import queue module
+try:
+    import Queue
+except ImportError:
+    QueueCheck = None
+
+try:
+    from queue import Queue
+except ImportError:
+    queueCheck = None
 
 logging.basicConfig(filename='./info.log', level=logging.INFO)
 logging.basicConfig(filename='./debug.log', level=logging.DEBUG)
@@ -204,8 +213,17 @@ def Main():
     else:
         logging.info('found Tkinter')
 
-    queue = Queue()
-    logging.info('queue generate success')
+    if not queueCheck:
+        logging.error('not found queue module')
+    else:
+        logging.info('Queue generate success 3')
+        queue = Queue()
+
+    if not QueueCheck:
+        logging.error('not found Queue module')
+    elif not queue:
+        logging.info('queue generate success 2')
+        queue = Queue.Queue()
 
     if tkinter:
         main_window = NativeMessagingWindow3(queue)
