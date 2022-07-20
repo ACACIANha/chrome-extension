@@ -15,7 +15,18 @@ import json
 import os
 import subprocess
 
-import tkinter
+try:
+    import tkinter
+except ImportError:
+    tkinter = None
+    logging.error('not found tkinter')
+
+try:
+    import Tkinter
+    import tkMessageBox
+except ImportError:
+    Tkinter = None
+    logging.error('not found Tkinter')
 
 from queue import Queue
 
@@ -140,7 +151,7 @@ def read_thread_func(queue):
 
 
 if tkinter:
-    class NativeMessagingWindow(tkinter.Frame):
+    class NativeMessagingWindow3(tkinter.Frame):
         def __init__(self, queue):
             self.queue = queue
 
@@ -159,6 +170,25 @@ if tkinter:
 
             self.after(100, self.processMessages)
 
+if Tkinter:
+    class NativeMessagingWindow2(Tkinter.Frame):
+        def __init__(self, queue):
+            self.queue = queue
+
+            Tkinter.Frame.__init__(self)
+            self.pack()
+            self.after(100, self.processMessages)
+
+        def processMessages(self):
+            while not self.queue.empty():
+                message = self.queue.get_nowait()
+                if message == None:
+                    self.quit()
+                    return
+                self.log("Received %s" % message)
+
+            self.after(100, self.processMessages)
+
 
 def Main():
     if not tkinter:
@@ -168,12 +198,22 @@ def Main():
                      'mode. Please consider installing Tkinter."')
         read_thread_func(None)
         sys.exit(0)
+    else:
+        logging.info('found tkinter')
 
-    logging.info('found tkinter')
+    if not Tkinter:
+        logging.error('not found Tkinter')
+    else:
+        logging.info('found Tkinter')
+
     queue = Queue()
     logging.info('queue generate success')
 
-    main_window = NativeMessagingWindow(queue)
+    if tkinter:
+        main_window = NativeMessagingWindow3(queue)
+    else:
+        main_window = NativeMessagingWindow2(queue)
+
     logging.info('window generate success')
     main_window.master.title('Native Messaging Example')
 
