@@ -22,6 +22,8 @@ from queue import Queue
 logging.basicConfig(filename='./info.log', level=logging.INFO)
 logging.basicConfig(filename='./debug.log', level=logging.DEBUG)
 logging.info('sys.platform : ' + sys.platform)
+logging.info('sys.version : ' + sys.version)
+logging.info(sys.version_info)
 
 # On Windows, the default I/O mode is O_TEXT. Set this to O_BINARY
 # to avoid unwanted modifications of the input/output streams.
@@ -35,10 +37,22 @@ if sys.platform == "win32":
 # Helper function that sends a message to the webapp.
 def send_message(message):
     # Write message size.
-    sys.stdout.write(struct.pack('I', len(message)))
+
+    logging.info('send_message1')
+    if sys.version_info[0] < 3:
+        logging.info('send_message_version2')
+        sys.stdout.write(struct.pack('I', len(message)))
+    if sys.version_info[0] >= 3:
+        logging.info('send_message_version3')
+        sys.stdout.buffer.write(struct.pack('I', len(message)))
+
+    # sys.stdout.write(struct.pack('I', len(message)))
     # Write the message itself.
+    logging.info('send_message2')
     sys.stdout.write(message)
+    logging.info('send_message3')
     sys.stdout.flush()
+    logging.info('send_message4')
 
 
 def send_message_string_to_json(message):
@@ -52,30 +66,63 @@ def send_message_string_to_json(message):
 
 # Thread that reads messages from the webapp.
 def read_thread_func(queue):
+    logging.info('read_thread_func')
     while 1:
         # Read the message length (first 4 bytes).
-        text_length_bytes = sys.stdin.read(4)
+        logging.info('read_thread_func_while1')
+        logging.info(sys.version_info[0])
+        logging.info(sys.version_info[1])
+        logging.info(sys.version_info[2])
+
+        logging.info('read_thread_func_while2')
+
+        if sys.version_info[0] < 3:
+            logging.info('read_thread_func_version2')
+            text_length_bytes = sys.stdin.read(4)
+        if sys.version_info[0] >= 3:
+            logging.info('read_thread_func_version3')
+            text_length_bytes = sys.stdin.buffer.read(4)
+
+        logging.info('read_thread_func_while3')
 
         if len(text_length_bytes) == 0:
-            logging.info('close')
-            send_message_string_to_json("lengh is 0")
             if queue:
                 queue.put(None)
+            logging.info('close')
             sys.exit(0)
 
-        # Unpack message length as 4 byte integer.
-        text_length = struct.unpack('i', text_length_bytes)[0]
+        # int.from_bytes(text_length_bytes, 'little')       //python3 ?
 
+        # Unpack message length as 4 byte integer.
+        logging.info('read_thread_func_before_unpack')
+        text_length = struct.unpack('i', text_length_bytes)[0]
+        logging.info('read_thread_func_after_unpack')
         # Read the text (JSON object) of the message.
-        text = sys.stdin.read(text_length).decode('utf-8')
+
+        if sys.version_info[0] < 3:
+            logging.info('read_thread_func_version2')
+            text = sys.stdin.read(text_length).decode('utf-8')
+        if sys.version_info[0] >= 3:
+            logging.info('read_thread_func_version3')
+            text = sys.stdin.buffer.read(text_length).decode('utf-8')
+
         logging.info('read message' + text)
 
         y = json.loads(text)
         path = y["text"]
-        openCommand5 = 'open /Applications/'
-        openCommand7 = '.app'
 
-        num = os.system(openCommand5 + path + openCommand7)
+        logging.info(sys.platform)
+        if sys.platform == "darwin":
+            logging.info('open in mac')
+            openCommandHead = 'open /Applications/'
+            openCommandTail = '.app'
+
+        if sys.platform == "win32":
+            logging.info('open in window')
+            openCommandHead = '"C:/Windows/System32/'
+            openCommandTail = '.exe"'
+
+        num = os.system(openCommandHead + path + openCommandTail)
 
         tempText = "default"
         if num == 0:
