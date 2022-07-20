@@ -19,14 +19,12 @@ try:
     import tkinter
 except ImportError:
     tkinter = None
-    logging.error('not found tkinter')
 
 try:
     import Tkinter
     import tkMessageBox
 except ImportError:
     Tkinter = None
-    logging.error('not found Tkinter')
 
 from queue import Queue
 
