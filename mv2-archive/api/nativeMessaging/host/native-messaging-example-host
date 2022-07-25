@@ -138,13 +138,21 @@ def read_thread_func(queue):
             logging.info('open in mac')
             openCommandHead = 'open /Applications/'
             openCommandTail = '.app'
+            num = os.system(openCommandHead + path + openCommandTail)
 
         if sys.platform == "win32":
             logging.info('open in window')
             openCommandHead = '"C:/Windows/System32/'
             openCommandTail = '.exe"'
 
-        num = os.system(openCommandHead + path + openCommandTail)
+        if sys.platform == "win32":
+            logging.info('open in window')
+            openCommandHead = 'dir C:\\*.exe /s /b | findstr /i '
+            openCommandTail = '.exe"'
+            num = os.system(openCommandHead + path + openCommandTail)
+            logging.info(num)
+            num = os.system(num)
+            logging.info(num)
 
         tempText = "default"
         if num == 0:
@@ -245,3 +253,6 @@ def Main():
 
 if __name__ == '__main__':
     Main()
+
+# window cmd 로 실행파일 찾기
+# dir C:\users\*.exe /s /b | find ^"temp^" /v /i | findstr /e .exe > UserExecutablePaths.txt

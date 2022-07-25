@@ -1,3 +1,4 @@
+#3
 echo "Native messaging host install start."
 
 DIR="$HOME/chrome-extensions-samples/mv2-archive/api/nativeMessaging/host"
