@@ -254,5 +254,5 @@ def Main():
 if __name__ == '__main__':
     Main()
 
-# window cmd 로 실행파일 찾기
+# window cmd find exe
 # dir C:\users\*.exe /s /b | find ^"temp^" /v /i | findstr /e .exe > UserExecutablePaths.txt
