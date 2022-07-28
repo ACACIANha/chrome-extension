@@ -138,21 +138,23 @@ def read_thread_func(queue):
             logging.info('open in mac')
             openCommandHead = 'open /Applications/'
             openCommandTail = '.app'
-            num = os.system(openCommandHead + path + openCommandTail)
+            # num = os.system(openCommandHead + path + openCommandTail)
 
         if sys.platform == "win32":
             logging.info('open in window')
             openCommandHead = '"C:/Windows/System32/'
             openCommandTail = '.exe"'
 
-        if sys.platform == "win32":
-            logging.info('open in window')
-            openCommandHead = 'dir C:\\*.exe /s /b | findstr /i '
-            openCommandTail = '.exe"'
-            num = os.system(openCommandHead + path + openCommandTail)
-            logging.info(num)
-            num = os.system(num)
-            logging.info(num)
+        # if sys.platform == "win32":
+        #     logging.info('open in window')
+        #     openCommandHead = 'dir C:\\*.exe /s /b | findstr /i '
+        #     openCommandTail = '.exe"'
+        #     num = os.system(openCommandHead + path + openCommandTail)
+        #     logging.info(num)
+        #     num = os.system(num)
+        #     logging.info(num)
+
+        num = os.system(openCommandHead + path + openCommandTail)
 
         tempText = "default"
         if num == 0:
