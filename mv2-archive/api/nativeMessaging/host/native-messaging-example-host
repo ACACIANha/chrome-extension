@@ -171,43 +171,44 @@ def read_thread_func(queue):
             send_message('{"echo": %s}' % text)
 
 
-class NativeMessagingWindow3(tkinter.Frame):
-    def __init__(self, queue):
-        self.queue = queue
+if tkinter:
+    class NativeMessagingWindow3(tkinter.Frame):
+        def __init__(self, queue):
+            self.queue = queue
 
-        tkinter.Frame.__init__(self)
-        self.pack()
-        self.after(100, self.processMessages)
+            tkinter.Frame.__init__(self)
+            self.pack()
+            self.after(100, self.processMessages)
 
-    def processMessages(self):
-        logging.debug('processMessages method')
+        def processMessages(self):
+            logging.debug('processMessages method')
 
-        while not self.queue.empty():
-            message = self.queue.get_nowait()
-            if message == None:
-                self.quit()
-                return
+            while not self.queue.empty():
+                message = self.queue.get_nowait()
+                if message == None:
+                    self.quit()
+                    return
 
-        self.after(100, self.processMessages)
+            self.after(100, self.processMessages)
 
+if Tkinter:
+    class NativeMessagingWindow2(Tkinter.Frame):
+        def __init__(self, queue):
+            self.queue = queue
 
-class NativeMessagingWindow2(Tkinter.Frame):
-    def __init__(self, queue):
-        self.queue = queue
+            Tkinter.Frame.__init__(self)
+            self.pack()
+            self.after(100, self.processMessages)
 
-        Tkinter.Frame.__init__(self)
-        self.pack()
-        self.after(100, self.processMessages)
+        def processMessages(self):
+            while not self.queue.empty():
+                message = self.queue.get_nowait()
+                if message == None:
+                    self.quit()
+                    return
+                self.log("Received %s" % message)
 
-    def processMessages(self):
-        while not self.queue.empty():
-            message = self.queue.get_nowait()
-            if message == None:
-                self.quit()
-                return
-            self.log("Received %s" % message)
-
-        self.after(100, self.processMessages)
+            self.after(100, self.processMessages)
 
 
 def Main():
